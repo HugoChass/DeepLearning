@@ -45,7 +45,7 @@ DataClass = getattr(medmnist, info['python_class'])
 data_transform = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize(mean=[.5], std=[.5])
-]) # correct for the retina dataset? 
+])  # correct for the retina dataset?
 
 # load the data
 train_dataset = DataClass(split='train', transform=data_transform, download=download)
@@ -55,8 +55,10 @@ pil_dataset = DataClass(split='train', download=download)
 
 # encapsulate data into dataloader form
 train_loader = data.DataLoader(dataset=train_dataset, batch_size=BATCH_SIZE, shuffle=True)
-train_loader_at_eval = data.DataLoader(dataset=train_dataset, batch_size=BATCH_SIZE, shuffle=False) # CAG: changed "2*BATCH_SIZE" to "BATCH_SIZE"
-test_loader = data.DataLoader(dataset=test_dataset, batch_size=BATCH_SIZE, shuffle=False) # CAG: changed "2*BATCH_SIZE" to "BATCH_SIZE"
+train_loader_at_eval = data.DataLoader(dataset=train_dataset, batch_size=BATCH_SIZE,
+                                       shuffle=False)  # CAG: changed "2*BATCH_SIZE" to "BATCH_SIZE"
+test_loader = data.DataLoader(dataset=test_dataset, batch_size=BATCH_SIZE,
+                              shuffle=False)  # CAG: changed "2*BATCH_SIZE" to "BATCH_SIZE"
 
 print(train_dataset)
 print("===================")
@@ -74,6 +76,7 @@ for x, y in train_loader:
     print(x.shape, y.shape)
     break
 
+
 class TorchNet(nn.Module):
     """
     PyTorch neural network. Network layers are defined in __init__ and forward
@@ -84,14 +87,13 @@ class TorchNet(nn.Module):
         hidden_dim: number of features in hidden dimension
         out_features: number of features in output layer
     """
-    
+
     def __init__(self, in_features, hidden_dim, out_features):
         super(TorchNet, self).__init__()
 
         self.layer1 = nn.Linear(in_features, hidden_dim)
-        self.relu   = nn.ReLU()
+        self.relu = nn.ReLU()
         self.layer2 = nn.Linear(hidden_dim, out_features)
-
 
     def forward(self, x):
         # x = torch.flatten(x)
@@ -99,10 +101,11 @@ class TorchNet(nn.Module):
         x = self.relu(x)
         x = self.layer2(x)
         return x
-    
+
+
 # Initialize Pytorch network
-in_features  = 3*28*28
-hidden_dim   = 512
+in_features = 3 * 28 * 28
+hidden_dim = 512
 out_features = 5
 
 model = TorchNet(in_features, hidden_dim, out_features)
@@ -114,7 +117,7 @@ if task == "multi-label, binary-class":
 else:
     criterion = nn.CrossEntropyLoss()
     criterion_vec = nn.CrossEntropyLoss(reduction='none')
-    
+
 optimizer = optim.SGD(model.parameters(), lr=lr, momentum=0.9)
 
 # train
@@ -124,14 +127,14 @@ for epoch in range(NUM_EPOCHS):
     train_total = 0
     test_correct = 0
     test_total = 0
-    
+
     model.train()
     for inputs, targets in tqdm(train_loader):
         # forward + backward + optimize
         optimizer.zero_grad()
-        inputs = inputs.view(BATCH_SIZE, -1) # CAG: is it okay to flatten?
+        inputs = inputs.view(BATCH_SIZE, -1)  # CAG: is it okay to flatten?
         outputs = model(inputs)
-        
+
         if task == 'multi-label, binary-class':
             targets = targets.to(torch.float32)
             loss = criterion(outputs, targets)
@@ -139,14 +142,14 @@ for epoch in range(NUM_EPOCHS):
             targets = targets.squeeze().long()
             loss = criterion(outputs, targets)
             loss_vec = criterion_vec(outputs, targets)
-        
+
         loss.backward()
         optimizer.step()
 
 # Get inputs, gradients, and weights
-x     = inputs
-y     = targets
-dLdy  = loss_vec 
+x = inputs
+y = targets
+dLdy = loss_vec
 dLdw2 = model.layer2.weight.grad
 dLdb2 = model.layer2.bias.grad
 dLdw1 = model.layer1.weight.grad
@@ -154,18 +157,19 @@ dLdb1 = model.layer1.bias.grad
 
 print("Size of dLdy", dLdy.shape, "should be equal to", y.shape)
 
+
 # evaluation
 
 def test(split):
     model.eval()
     y_true = torch.tensor([])
     y_score = torch.tensor([])
-    
+
     data_loader = train_loader_at_eval if split == 'train' else test_loader
 
     with torch.no_grad():
         for inputs, targets in data_loader:
-            inputs = inputs.view(BATCH_SIZE, -1) # CAG: is it okay to flatten?
+            inputs = inputs.view(BATCH_SIZE, -1)  # CAG: is it okay to flatten?
             outputs = model(inputs)
 
             if task == 'multi-label, binary-class':
@@ -181,13 +185,13 @@ def test(split):
 
         y_true = y_true.numpy()
         y_score = y_score.detach().numpy()
-        
+
         evaluator = Evaluator(data_flag, split)
         metrics = evaluator.evaluate(y_score)
-    
+
         print('%s  auc: %.3f  acc:%.3f' % (split, *metrics))
 
-        
+
 print('==> Evaluating ...')
 test('train')
 test('test')
@@ -196,4 +200,4 @@ test('test')
 # When the batch size is set to twice as much for evaluating, 1080/16 = 67.5 the last input to evaluate will have half the size which will result in an error
 # Since speed is not as important, the batch size for evaluating has been set to same as training: 8
 # Idendito for the test loader because of the last line: test('test')
-# H is the amount of hidden layers 
+# H is the amount of hidden layers
