@@ -1,3 +1,3 @@
 
-def algo1():
+def algo1(gradients):
     pass
