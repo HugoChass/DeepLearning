@@ -39,4 +39,4 @@ def main(retrain=False):
 
 
 if __name__ == "__main__":
-    main()
+    main(retrain=True)

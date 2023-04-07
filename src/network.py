@@ -25,11 +25,11 @@ class TorchNet(nn.Module):
         super(TorchNet, self).__init__()
 
         self.layer1 = nn.Linear(in_features, hidden_dim, device=device)
-        self.relu1 = nn.ReLU()
+        self.relu = nn.ReLU()
         self.layer2 = nn.Linear(hidden_dim, out_features, device=device)
-        # self.relu2 = nn.ReLU()
+        self.softmax = nn.Softmax(dim=1)
 
-        self.layers = [self.layer1, self.relu1, self.layer2]
+        self.layers = [self.layer1, self.relu, self.layer2, self.softmax]
 
     def forward(self, x):
         for layer in self.layers:
