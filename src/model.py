@@ -11,6 +11,7 @@ import torch
 import torch.nn as nn
 import matplotlib.pyplot as plt
 from src.network import TorchNet
+from src.constants import *
 
 # Requirements for RetinaMNIST dataset
 import torch.optim as optim
@@ -119,10 +120,6 @@ def init_model(NUM_EPOCHS):
         break
 
     # Initialize Pytorch network
-    in_features = 3 * 28 * 28
-    hidden_dim = 512
-    out_features = 5
-
     model = TorchNet(in_features, hidden_dim, out_features)
     # print(model)
 
