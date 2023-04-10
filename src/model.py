@@ -26,8 +26,10 @@ from tqdm import tqdm
 
 # run on GPU if available
 if torch.cuda.is_available():
+    print("Using GPU")
     dev = "cuda:0"
 else:
+    print("Using CPU")
     dev = "cpu"
 device = torch.device(dev)
 
