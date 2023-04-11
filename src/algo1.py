@@ -1,5 +1,8 @@
 import numpy as np
 import math
+import random
+
+from src.algo2 import algo2
 
 
 def algo1(gradients):
@@ -45,6 +48,29 @@ def algo1(gradients):
     # exclude the group of disjoint indices which is made by the NaN values
     I = I[:-1]
 
+    # M is now inferred batch size, no correlation with m used before (might be better to change the M before)
+    M = len(I)
+    # Make a new matrix with size K x M to store the g^m_c / g^m_1 values to parse to the next algorithm
+    g_mc = np.zeros((K, M))
+
+    for c in range(K):
+        for m in range(M):
+            # Get disjoint index group m
+            Im = I[m]
+            # select an arbitrary index from Im
+            # Index does not really matter since any r[c][j] has the same value, picking the first might have been
+            # easier
+            j = random.choice(Im)
+            # Get the value of r_cj
+            rc = r[c][j]
+            # make g^m_c / g^m_1 = r_cj
+            g_mc[c, m] = rc
+
+    # The loop which runs from line 11 till the end
+    for m in range(M):
+        # Call algo 2 with the gradient things
+        Y_m = algo2(g_mc[:, m])
+        # Add steps 13-15 here
 
     pass
     pass
