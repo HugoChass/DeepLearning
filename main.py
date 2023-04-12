@@ -1,5 +1,7 @@
 import torch
 import os
+import numpy
+import pandas as  pd
 from pathlib import Path
 
 from src.model import init_model
@@ -19,24 +21,27 @@ def main(retrain=False):
         if retrain:
             raise FileNotFoundError
 
-        # Load model
+        # Load model (obsolete?)
         model = TorchNet(in_features, hidden_dim, out_features)
         model.load_state_dict(torch.load(Path("models", "model.dat")))
 
-        # Extract the gradients from the loaded network
-        dLdw2 = model.layer2.weight.grad
-        dLdb2 = model.layer2.bias.grad
-        dLdw1 = model.layer1.weight.grad
-        dLdb1 = model.layer1.bias.grad
-        gradients = [dLdw1, dLdb1, dLdw2, dLdb2]
+        # Extract the gradients from the gradient file
+        df = pd.read_pickle('models/gradients.pkl')
+        gradients = []
+        for index, row in df.iterrows():
+            gradients.append(torch.tensor(row[0]))
+
+
     except FileNotFoundError:
         # Train a new network and save its weights
         model, gradients = init_model(200)
         torch.save(model.state_dict(), Path("models", "model.dat"))
+        grad = pd.DataFrame(numpy.array([x.tolist() for x in gradients]))
+        grad.to_pickle('models/gradients.pkl')
 
     # First part of the reconstruction algorithm
     algo1(gradients)
 
 
 if __name__ == "__main__":
-    main(retrain=True)
+    main(retrain=False)
