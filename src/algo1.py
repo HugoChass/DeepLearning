@@ -63,7 +63,7 @@ def algo1(gradients):
             j = random.choice(Im)
             # Get the value of r_cj
             rc = r[c][j]
-            # make g^m_c / g^m_1 = r_cj
+            # make g^m_c / g^m_1 = r_cj, CAG: this needs to be ratio right?
             g_mc[c, m] = rc
 
     # The loop which runs from line 11 till the end
@@ -71,6 +71,10 @@ def algo1(gradients):
         # Call algo 2 with the gradient things
         Y_m = algo2(g_mc[:, m])
         # Add steps 13-15 here
+        delta_m = 1/g_mc[Y_m, m] # CAG: ratio
+        g_m1 = (2/3)*delta_m
+        # Calc g_mc with ratio
+        g_mc[:, m] = g_mc[:, m]*g_m1 # CAG: ratio
 
     pass
     pass
