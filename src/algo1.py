@@ -71,10 +71,9 @@ def algo1(gradients):
         # Call algo 2 with the gradient things
         Y_m = algo2(g_mc[:, m])
         # Add steps 13-15 here
-        delta_m = 1/g_mc[Y_m, m] # CAG: ratio
+        delta_m = 1/g_mc[Y_m, m]  # CAG: ratio
         g_m1 = (2/3)*delta_m
         # Calc g_mc with ratio
-        g_mc[:, m] = g_mc[:, m]*g_m1 # CAG: ratio
+        g_mc[:, m] = g_mc[:, m]*g_m1  # CAG: ratio
 
-    pass
-    pass
+    return g_mc

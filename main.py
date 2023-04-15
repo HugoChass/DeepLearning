@@ -1,7 +1,7 @@
 import torch
 import os
 import numpy
-import pandas as  pd
+import pandas as pd
 from pathlib import Path
 
 from src.model import init_model
@@ -39,7 +39,10 @@ def main(retrain=False):
         grad.to_pickle('models/gradients.pkl')
 
     # First part of the reconstruction algorithm
-    algo1(gradients)
+    g_mc = algo1(gradients)
+    print("Printing output of Algorithm 1:")
+    print(g_mc.shape)
+    print(g_mc)
 
 
 if __name__ == "__main__":
