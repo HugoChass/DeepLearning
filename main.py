@@ -31,7 +31,6 @@ def main(retrain=False):
         for index, row in df.iterrows():
             gradients.append(torch.tensor(row[0]))
 
-
     except FileNotFoundError:
         # Train a new network and save its weights
         model, gradients = init_model(200)
