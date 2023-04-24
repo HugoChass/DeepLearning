@@ -78,9 +78,6 @@ def init_model(NUM_EPOCHS):
     data_flag = 'retinamnist'
     download = True
 
-    BATCH_SIZE = 40
-    lr = 0.001
-
     info = INFO[data_flag]
     task = info['task']
     n_channels = info['n_channels']

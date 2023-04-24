@@ -76,4 +76,4 @@ def algo1(gradients):
         # Calc g_mc with ratio
         g_mc[:, m] = g_mc[:, m]*g_m1  # CAG: ratio
 
-    return g_mc
+    return g_mc, I

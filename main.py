@@ -6,6 +6,8 @@ from pathlib import Path
 
 from src.model import init_model
 from src.algo1 import algo1
+from src.algo3 import algo3
+from src.find_insecure import find_insecure_batch
 
 from src.network import TorchNet
 from src.constants import *
@@ -35,15 +37,19 @@ def main(retrain=False):
         # Train a new network and save its weights
         model, gradients = init_model(200)
         torch.save(model.state_dict(), Path("models", "model.dat"))
-        grad = pd.DataFrame(numpy.array([x.tolist() for x in gradients]))
-        grad.to_pickle('models/gradients.pkl')
+        # grad = pd.DataFrame(numpy.array([x.tolist() for x in gradients]))
+        # grad.to_pickle('models/gradients.pkl')
 
     # First part of the reconstruction algorithm
-    g_mc = algo1(gradients)
+    g_mc, I = algo1(gradients)
     print("Printing output of Algorithm 1:")
     print(g_mc.shape)
     print(g_mc)
 
+    algo3(gradients, I, g_mc)
+
+    find_insecure_batch(100)
+
 
 if __name__ == "__main__":
-    main(retrain=False)
+    main(retrain=True)
