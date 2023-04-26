@@ -43,6 +43,7 @@ def algo3(gradients, I_mH, g_mc):
             print(' --- Not enough exans found, Failed --- ')
             break
         
+        
     else:
         print(' --- Fucking worked mate --- ')
 
