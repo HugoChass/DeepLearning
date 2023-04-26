@@ -48,8 +48,8 @@ def main(retrain=False):
 
     algo3(gradients, I, g_mc)
 
-    find_insecure_batch(100)
+    #find_insecure_batch(100)
 
 
 if __name__ == "__main__":
-    main(retrain=True)
+    main(retrain=False)
