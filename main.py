@@ -42,13 +42,13 @@ def main(retrain=False):
 
     # First part of the reconstruction algorithm
     g_mc, I = algo1(gradients)
-    print("Printing output of Algorithm 1:")
-    print(g_mc.shape)
-    print(g_mc)
+    #print("Printing output of Algorithm 1:")
+    #print(g_mc.shape)
+    #print(g_mc)
 
     algo3(gradients, I, g_mc)
 
-    #find_insecure_batch(100)
+    find_insecure_batch(100)
 
 
 if __name__ == "__main__":
