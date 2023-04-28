@@ -1,1 +1,4 @@
-# deeplearning
+# Deeplearning
+This repository contains the code which was used in an attempt to recreate the training data-reconstruction algorithm described in the paper "Exploring the Security Boundary of Data Reconstruction via Neuron Exclusivity Analysis" by Xudong Pan, Mi Zhang, Yifan Yan, Jiaming Zhu and Min Yang of the Fudan University.
+
+The entire code was written such that it can be used by simply running the "main.py" file. This file will then automatically train the RetinaMNIST model and use the algorithm presented in the paper in an attempt to recover training samples from the model. The current implementation of the algorithm is suspected to be faulty as reconstruction from the original paper proved to be difficult. For this reason the implementation is currently unfinished and unable to produce results. Further clarification on this is given in the blog post present in the wiki page of this repository.
