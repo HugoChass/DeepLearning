@@ -11,14 +11,6 @@ def algo1(gradients):
     K = 5  # For retinamnist
     G_H = gradients[-2].cpu().numpy()
 
-    deterministic = []
-    for m in range(M):
-        sample = G_H[:, m]
-        y = sum([1 if x < 0 else 0 for x in sample])
-        if y != 1:
-            y = 0
-        deterministic.append(y)
-
     print("Starting first algorithm...")
     # Step 3
     r = []
