@@ -106,4 +106,4 @@ def find_insecure_batch(NUM_EPOCHS):
         gradients = [dLdW1, dLdb1, dLdW2, dLdb2]
 
         g_mc, I = algo1(gradients)
-        algo3(gradients, I, g_mc)
+        Dmh = algo3(gradients, I, g_mc)

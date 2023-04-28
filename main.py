@@ -1,6 +1,6 @@
 import torch
 import os
-import numpy
+import numpy as np
 import pandas as pd
 from pathlib import Path
 
@@ -46,7 +46,7 @@ def main(retrain=False):
     #print(g_mc.shape)
     #print(g_mc)
 
-    algo3(gradients, I, g_mc)
+    Dmh = algo3(gradients, I, g_mc)
 
     find_insecure_batch(100)
 
