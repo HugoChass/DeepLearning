@@ -9,31 +9,30 @@ def algo3(gradients, I_mH, g_mc):
     M = len(I_mH)
     Dm = np.array([np.zeros((512, 512)), np.zeros((5, 5))], dtype=object)
     D = np.tile(Dm, (M, 1))
-    G = [gradients[0].cpu().numpy(), gradients[2].cpu().numpy()]  # remove biases from gradients list
-    B = [gradients[1].cpu().numpy(), gradients[3].cpu().numpy()]
+    G = [gradients[0].cpu().numpy(), gradients[2].cpu().numpy()]  #  gradients list
+    B = [gradients[1].cpu().numpy(), gradients[3].cpu().numpy()]  #  bias list
     I_cur = I_mH
-    for i in reversed(range(1, H - 1)):
+    for i in reversed(range(1, H - 1)):  # Loop over each layer
         for m in range(M):
             j = random.choice(I_cur[m])
             ind = 0
-            for val in G[i][:, j]:  # check for the zero's in the col, if so, not activated in diag
-                #print(val)
+            for val in G[i][:, j]:  # check for the zero's in the col, if so, not activated in diagonal matrix D
                 if val != 0:
                     D[m][i][ind, ind] = 1
                 ind += 1
 
-        D_sum = D[:, i].sum()
-        #D_sum = np.identity(5)
+        D_sum = D[:, i].sum() # Sum over all D matrices created
+
         exan_lst = []
-        for k in range(D_sum.shape[0]):
+        for k in range(D_sum.shape[0]): # Check if a neuron is an EXAN
             if D_sum[k, k] == 1:
-                exan_lst.append(k)
+                exan_lst.append(k) # Append EXAN coordinates
 
         I_sets = []
-        for d in D[:, i]:
+        for d in D[:, i]: # Loop over each diagonal matrices to find the sample m for which an EXAN was found
             temp_lst = []
             for k in exan_lst:
-                if d[k, k] == 1:
+                if d[k, k] == 1: # Check if EXAN is found
                     temp_lst.append(k)
             I_sets.append(temp_lst)
         I_cur = I_sets
